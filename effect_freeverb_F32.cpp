@@ -35,14 +35,14 @@
 
 void AudioEffectFreeverb_F32::init()
 {
-  for (unsigned int i = 0; i < sizeof(comb1buf) / sizeof(float); i++) comb1buf[i] = 0.0;
-  for (unsigned int i = 0; i < sizeof(comb2buf) / sizeof(float); i++) comb2buf[i] = 0.0;
-  for (unsigned int i = 0; i < sizeof(comb3buf) / sizeof(float); i++) comb3buf[i] = 0.0;
-  for (unsigned int i = 0; i < sizeof(comb4buf) / sizeof(float); i++) comb4buf[i] = 0.0;
-  for (unsigned int i = 0; i < sizeof(comb5buf) / sizeof(float); i++) comb5buf[i] = 0.0;
-  for (unsigned int i = 0; i < sizeof(comb6buf) / sizeof(float); i++) comb6buf[i] = 0.0;
-  for (unsigned int i = 0; i < sizeof(comb7buf) / sizeof(float); i++) comb7buf[i] = 0.0;
-  for (unsigned int i = 0; i < sizeof(comb8buf) / sizeof(float); i++) comb8buf[i] = 0.0;
+  for (unsigned int i = 0; i < sizeof(comb1buf) / sizeof(float); i++) comb1buf[i] = 0.0f;
+  for (unsigned int i = 0; i < sizeof(comb2buf) / sizeof(float); i++) comb2buf[i] = 0.0f;
+  for (unsigned int i = 0; i < sizeof(comb3buf) / sizeof(float); i++) comb3buf[i] = 0.0f;
+  for (unsigned int i = 0; i < sizeof(comb4buf) / sizeof(float); i++) comb4buf[i] = 0.0f;
+  for (unsigned int i = 0; i < sizeof(comb5buf) / sizeof(float); i++) comb5buf[i] = 0.0f;
+  for (unsigned int i = 0; i < sizeof(comb6buf) / sizeof(float); i++) comb6buf[i] = 0.0f;
+  for (unsigned int i = 0; i < sizeof(comb7buf) / sizeof(float); i++) comb7buf[i] = 0.0f;
+  for (unsigned int i = 0; i < sizeof(comb8buf) / sizeof(float); i++) comb8buf[i] = 0.0f;
   comb1index = 0;
   comb2index = 0;
   comb3index = 0;
@@ -51,21 +51,21 @@ void AudioEffectFreeverb_F32::init()
   comb6index = 0;
   comb7index = 0;
   comb8index = 0;
-  comb1filter = 0.0;
-  comb2filter = 0.0;
-  comb3filter = 0.0;
-  comb4filter = 0.0;
-  comb5filter = 0.0;
-  comb6filter = 0.0;
-  comb7filter = 0.0;
-  comb8filter = 0.0;
-  combdamp1 = 6553.0;
-  combdamp2 = 26215.0;
-  combfeeback = 27524.0;
-  for (unsigned int i = 0; i < sizeof(allpass1buf) / sizeof(float); i++) allpass1buf[i] = 0.0;
-  for (unsigned int i = 0; i < sizeof(allpass2buf) / sizeof(float); i++) allpass2buf[i] = 0.0;
-  for (unsigned int i = 0; i < sizeof(allpass3buf) / sizeof(float); i++) allpass3buf[i] = 0.0;
-  for (unsigned int i = 0; i < sizeof(allpass4buf) / sizeof(float); i++) allpass4buf[i] = 0.0;
+  comb1filter = 0.0f;
+  comb2filter = 0.0f;
+  comb3filter = 0.0f;
+  comb4filter = 0.0f;
+  comb5filter = 0.0f;
+  comb6filter = 0.0f;
+  comb7filter = 0.0f;
+  comb8filter = 0.0f;
+  combdamp1 = 0.2f;
+  combdamp2 = 1.0f - combdamp1;
+  combfeeback = 0.84f;
+  for (unsigned int i = 0; i < sizeof(allpass1buf) / sizeof(float); i++) allpass1buf[i] = 0.0f;
+  for (unsigned int i = 0; i < sizeof(allpass2buf) / sizeof(float); i++) allpass2buf[i] = 0.0f;
+  for (unsigned int i = 0; i < sizeof(allpass3buf) / sizeof(float); i++) allpass3buf[i] = 0.0f;
+  for (unsigned int i = 0; i < sizeof(allpass4buf) / sizeof(float); i++) allpass4buf[i] = 0.0f;
   allpass1index = 0;
   allpass2index = 0;
   allpass3index = 0;
@@ -148,23 +148,23 @@ void AudioEffectFreeverb_F32::update()
     output = sum;
 
     bufout = allpass1buf[allpass1index];
-    allpass1buf[allpass1index] = output + (bufout / 2.0);
-    output = (bufout - output) / 2.0;
+    allpass1buf[allpass1index] = output + (bufout * 0.5f);
+    output = (bufout - output) * 0.5f;
     if (++allpass1index >= sizeof(allpass1buf) / sizeof(float)) allpass1index = 0;
 
     bufout = allpass2buf[allpass2index];
-    allpass2buf[allpass2index] = output + (bufout / 2.0);
-    output = (bufout - output) / 2.0;
+    allpass2buf[allpass2index] = output + (bufout * 0.5f);
+    output = (bufout - output) * 0.5f;
     if (++allpass2index >= sizeof(allpass2buf) / sizeof(float)) allpass2index = 0;
 
     bufout = allpass3buf[allpass3index];
-    allpass3buf[allpass3index] = output + (bufout / 2.0);
-    output = (bufout - output) / 2.0;
+    allpass3buf[allpass3index] = output + (bufout * 0.5f);
+    output = (bufout - output) * 0.5f;
     if (++allpass3index >= sizeof(allpass3buf) / sizeof(float)) allpass3index = 0;
 
     bufout = allpass4buf[allpass4index];
-    allpass4buf[allpass4index] = output + (bufout / 2.0);
-    output = (bufout - output) / 2.0;
+    allpass4buf[allpass4index] = output + (bufout * 0.5f);
+    output = (bufout - output) * 0.5f;
     if (++allpass4index >= sizeof(allpass4buf) / sizeof(float)) allpass4index = 0;
 
     outblock->data[i] = output;
@@ -184,14 +184,14 @@ void AudioEffectFreeverb_F32::update()
 
 void AudioEffectFreeverbStereo_F32::init()
 {
-  for (unsigned int i = 0; i < sizeof(comb1bufL) / sizeof(float); i++) comb1bufL[i] = 0.0;
-  for (unsigned int i = 0; i < sizeof(comb2bufL) / sizeof(float); i++) comb2bufL[i] = 0.0;
-  for (unsigned int i = 0; i < sizeof(comb3bufL) / sizeof(float); i++) comb3bufL[i] = 0.0;
-  for (unsigned int i = 0; i < sizeof(comb4bufL) / sizeof(float); i++) comb4bufL[i] = 0.0;
-  for (unsigned int i = 0; i < sizeof(comb5bufL) / sizeof(float); i++) comb5bufL[i] = 0.0;
-  for (unsigned int i = 0; i < sizeof(comb6bufL) / sizeof(float); i++) comb6bufL[i] = 0.0;
-  for (unsigned int i = 0; i < sizeof(comb7bufL) / sizeof(float); i++) comb7bufL[i] = 0.0;
-  for (unsigned int i = 0; i < sizeof(comb8bufL) / sizeof(float); i++) comb8bufL[i] = 0.0;
+  for (unsigned int i = 0; i < sizeof(comb1bufL) / sizeof(float); i++) comb1bufL[i] = 0.0f;
+  for (unsigned int i = 0; i < sizeof(comb2bufL) / sizeof(float); i++) comb2bufL[i] = 0.0f;
+  for (unsigned int i = 0; i < sizeof(comb3bufL) / sizeof(float); i++) comb3bufL[i] = 0.0f;
+  for (unsigned int i = 0; i < sizeof(comb4bufL) / sizeof(float); i++) comb4bufL[i] = 0.0f;
+  for (unsigned int i = 0; i < sizeof(comb5bufL) / sizeof(float); i++) comb5bufL[i] = 0.0f;
+  for (unsigned int i = 0; i < sizeof(comb6bufL) / sizeof(float); i++) comb6bufL[i] = 0.0f;
+  for (unsigned int i = 0; i < sizeof(comb7bufL) / sizeof(float); i++) comb7bufL[i] = 0.0f;
+  for (unsigned int i = 0; i < sizeof(comb8bufL) / sizeof(float); i++) comb8bufL[i] = 0.0f;
   comb1indexL = 0;
   comb2indexL = 0;
   comb3indexL = 0;
@@ -200,22 +200,22 @@ void AudioEffectFreeverbStereo_F32::init()
   comb6indexL = 0;
   comb7indexL = 0;
   comb8indexL = 0;
-  comb1filterL = 0.0;
-  comb2filterL = 0.0;
-  comb3filterL = 0.0;
-  comb4filterL = 0.0;
-  comb5filterL = 0.0;
-  comb6filterL = 0.0;
-  comb7filterL = 0.0;
-  comb8filterL = 0.0;
-  for (unsigned int i = 0; i < sizeof(comb1bufR) / sizeof(float); i++) comb1bufR[i] = 0.0;
-  for (unsigned int i = 0; i < sizeof(comb2bufR) / sizeof(float); i++) comb2bufR[i] = 0.0;
-  for (unsigned int i = 0; i < sizeof(comb3bufR) / sizeof(float); i++) comb3bufR[i] = 0.0;
-  for (unsigned int i = 0; i < sizeof(comb4bufR) / sizeof(float); i++) comb4bufR[i] = 0.0;
-  for (unsigned int i = 0; i < sizeof(comb5bufR) / sizeof(float); i++) comb5bufR[i] = 0.0;
-  for (unsigned int i = 0; i < sizeof(comb6bufR) / sizeof(float); i++) comb6bufR[i] = 0.0;
-  for (unsigned int i = 0; i < sizeof(comb7bufR) / sizeof(float); i++) comb7bufR[i] = 0.0;
-  for (unsigned int i = 0; i < sizeof(comb8bufR) / sizeof(float); i++) comb8bufR[i] = 0.0;
+  comb1filterL = 0.0f;
+  comb2filterL = 0.0f;
+  comb3filterL = 0.0f;
+  comb4filterL = 0.0f;
+  comb5filterL = 0.0f;
+  comb6filterL = 0.0f;
+  comb7filterL = 0.0f;
+  comb8filterL = 0.0f;
+  for (unsigned int i = 0; i < sizeof(comb1bufR) / sizeof(float); i++) comb1bufR[i] = 0.0f;
+  for (unsigned int i = 0; i < sizeof(comb2bufR) / sizeof(float); i++) comb2bufR[i] = 0.0f;
+  for (unsigned int i = 0; i < sizeof(comb3bufR) / sizeof(float); i++) comb3bufR[i] = 0.0f;
+  for (unsigned int i = 0; i < sizeof(comb4bufR) / sizeof(float); i++) comb4bufR[i] = 0.0f;
+  for (unsigned int i = 0; i < sizeof(comb5bufR) / sizeof(float); i++) comb5bufR[i] = 0.0f;
+  for (unsigned int i = 0; i < sizeof(comb6bufR) / sizeof(float); i++) comb6bufR[i] = 0.0f;
+  for (unsigned int i = 0; i < sizeof(comb7bufR) / sizeof(float); i++) comb7bufR[i] = 0.0f;
+  for (unsigned int i = 0; i < sizeof(comb8bufR) / sizeof(float); i++) comb8bufR[i] = 0.0f;
   comb1indexR = 0;
   comb2indexR = 0;
   comb3indexR = 0;
@@ -224,29 +224,29 @@ void AudioEffectFreeverbStereo_F32::init()
   comb6indexR = 0;
   comb7indexR = 0;
   comb8indexR = 0;
-  comb1filterR = 0.0;
-  comb2filterR = 0.0;
-  comb3filterR = 0.0;
-  comb4filterR = 0.0;
-  comb5filterR = 0.0;
-  comb6filterR = 0.0;
-  comb7filterR = 0.0;
-  comb8filterR = 0.0;
-  combdamp1 = 6553.0;
-  combdamp2 = 26215.0;
-  combfeeback = 27524.0;
-  for (unsigned int i = 0; i < sizeof(allpass1bufL) / sizeof(float); i++) allpass1bufL[i] = 0.0;
-  for (unsigned int i = 0; i < sizeof(allpass2bufL) / sizeof(float); i++) allpass2bufL[i] = 0.0;
-  for (unsigned int i = 0; i < sizeof(allpass3bufL) / sizeof(float); i++) allpass3bufL[i] = 0.0;
-  for (unsigned int i = 0; i < sizeof(allpass4bufL) / sizeof(float); i++) allpass4bufL[i] = 0.0;
+  comb1filterR = 0.0f;
+  comb2filterR = 0.0f;
+  comb3filterR = 0.0f;
+  comb4filterR = 0.0f;
+  comb5filterR = 0.0f;
+  comb6filterR = 0.0f;
+  comb7filterR = 0.0f;
+  comb8filterR = 0.0f;
+  combdamp1 = 0.2f;
+  combdamp2 = 1.0f - combdamp1;
+  combfeeback = 0.84f;
+  for (unsigned int i = 0; i < sizeof(allpass1bufL) / sizeof(float); i++) allpass1bufL[i] = 0.0f;
+  for (unsigned int i = 0; i < sizeof(allpass2bufL) / sizeof(float); i++) allpass2bufL[i] = 0.0f;
+  for (unsigned int i = 0; i < sizeof(allpass3bufL) / sizeof(float); i++) allpass3bufL[i] = 0.0f;
+  for (unsigned int i = 0; i < sizeof(allpass4bufL) / sizeof(float); i++) allpass4bufL[i] = 0.0f;
   allpass1indexL = 0;
   allpass2indexL = 0;
   allpass3indexL = 0;
   allpass4indexL = 0;
-  for (unsigned int i = 0; i < sizeof(allpass1bufR) / sizeof(float); i++) allpass1bufR[i] = 0.0;
-  for (unsigned int i = 0; i < sizeof(allpass2bufR) / sizeof(float); i++) allpass2bufR[i] = 0.0;
-  for (unsigned int i = 0; i < sizeof(allpass3bufR) / sizeof(float); i++) allpass3bufR[i] = 0.0;
-  for (unsigned int i = 0; i < sizeof(allpass4bufR) / sizeof(float); i++) allpass4bufR[i] = 0.0;
+  for (unsigned int i = 0; i < sizeof(allpass1bufR) / sizeof(float); i++) allpass1bufR[i] = 0.0f;
+  for (unsigned int i = 0; i < sizeof(allpass2bufR) / sizeof(float); i++) allpass2bufR[i] = 0.0f;
+  for (unsigned int i = 0; i < sizeof(allpass3bufR) / sizeof(float); i++) allpass3bufR[i] = 0.0f;
+  for (unsigned int i = 0; i < sizeof(allpass4bufR) / sizeof(float); i++) allpass4bufR[i] = 0.0f;
   allpass1indexR = 0;
   allpass2indexR = 0;
   allpass3indexR = 0;
@@ -329,7 +329,7 @@ void AudioEffectFreeverbStereo_F32::update()
     if (++comb8indexL >= sizeof(comb8bufL) / sizeof(float)) comb8indexL = 0;
 
     outputL = sum;
-    sum = 0.0;
+    sum = 0.0f;
 
     bufout = comb1bufR[comb1indexR];
     sum += bufout;
@@ -382,46 +382,46 @@ void AudioEffectFreeverbStereo_F32::update()
     outputR = sum;
 
     bufout = allpass1bufL[allpass1indexL];
-    allpass1bufL[allpass1indexL] = outputL + (bufout / 2.0);
-    outputL = (bufout - outputL) / 2.0;
+    allpass1bufL[allpass1indexL] = outputL + (bufout * 0.5f);
+    outputL = (bufout - outputL) * 0.5f;
     if (++allpass1indexL >= sizeof(allpass1bufL) / sizeof(float)) allpass1indexL = 0;
 
     bufout = allpass2bufL[allpass2indexL];
-    allpass2bufL[allpass2indexL] = outputL + (bufout / 2.0);
-    outputL = (bufout - outputL) / 2.0;
+    allpass2bufL[allpass2indexL] = outputL + (bufout * 0.5f);
+    outputL = (bufout - outputL) * 0.5f;
     if (++allpass2indexL >= sizeof(allpass2bufL) / sizeof(float)) allpass2indexL = 0;
 
     bufout = allpass3bufL[allpass3indexL];
-    allpass3bufL[allpass3indexL] = outputL + (bufout / 2.0);
-    outputL = (bufout - outputL) / 2.0;
+    allpass3bufL[allpass3indexL] = outputL + (bufout * 0.5f);
+    outputL = (bufout - outputL) * 0.5f;
     if (++allpass3indexL >= sizeof(allpass3bufL) / sizeof(float)) allpass3indexL = 0;
 
     bufout = allpass4bufL[allpass4indexL];
-    allpass4bufL[allpass4indexL] = outputL + (bufout / 2.0);
-    outputL = (bufout - outputL) / 2.0;
+    allpass4bufL[allpass4indexL] = outputL + (bufout * 0.5f);
+    outputL = (bufout - outputL) * 0.5f;
     if (++allpass4indexL >= sizeof(allpass4bufL) / sizeof(float)) allpass4indexL = 0;
 
     outblockL->data[i] = outputL;
 
     bufout = allpass1bufR[allpass1indexR];
-    allpass1bufR[allpass1indexR] = outputR + (bufout / 2.0);
+    allpass1bufR[allpass1indexR] = outputR + (bufout * 0.5f);
     //outputR = sat16(bufout - outputR, 1);
-    outputR = (bufout - outputR) / 2.0;
+    outputR = (bufout - outputR) * 0.5f;
     if (++allpass1indexR >= sizeof(allpass1bufR) / sizeof(float)) allpass1indexR = 0;
 
     bufout = allpass2bufR[allpass2indexR];
-    allpass2bufR[allpass2indexR] = outputR + (bufout / 2.0);
-    outputR = (bufout - outputR) / 2.0;
+    allpass2bufR[allpass2indexR] = outputR + (bufout * 0.5f);
+    outputR = (bufout - outputR) * 0.5f;
     if (++allpass2indexR >= sizeof(allpass2bufR) / sizeof(float)) allpass2indexR = 0;
 
     bufout = allpass3bufR[allpass3indexR];
-    allpass3bufR[allpass3indexR] = outputR + (bufout / 2.0);
-    outputR = (bufout - outputR) / 2.0;
+    allpass3bufR[allpass3indexR] = outputR + (bufout * 0.5f);
+    outputR = (bufout - outputR) * 0.5f;
     if (++allpass3indexR >= sizeof(allpass3bufR) / sizeof(float)) allpass3indexR = 0;
 
     bufout = allpass4bufR[allpass4indexR];
-    allpass4bufR[allpass4indexR] = outputR + (bufout / 2.0);
-    outputR = (bufout - outputR) / 2.0;
+    allpass4bufR[allpass4indexR] = outputR + (bufout * 0.5f);
+    outputR = (bufout - outputR) * 0.5f;
     if (++allpass4indexR >= sizeof(allpass4bufR) / sizeof(float)) allpass4indexR = 0;
 
     outblockR->data[i] = outputR;

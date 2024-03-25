@@ -35,6 +35,8 @@
 
 class AudioEffectFreeverb_F32 : public AudioStream_F32
 {
+//GUI: inputs:1, outputs:1  //this line used for automatic generation of GUI node
+//GUI: shortName:effect_Freeverb	
   public:
     AudioEffectFreeverb_F32() : AudioStream_F32(1, inputQueueArray) { init(); }
     AudioEffectFreeverb_F32(const AudioSettings_F32 &settings) : AudioStream_F32(1, inputQueueArray) { init(); }
@@ -42,12 +44,12 @@ class AudioEffectFreeverb_F32 : public AudioStream_F32
     void roomsize(float n) {
       if (n > 1.0f) n = 1.0f;
       else if (n < 0.0f) n = 0.0f;
-      combfeeback = (n * 9175.04f / 32768.0f) + 22937.0f / 32768.0f;
+      combfeeback = (n * 0.28f) + 0.7f;
     }
     void damping(float n) {
       if (n > 1.0f) n = 1.0f;
       else if (n < 0.0f) n = 0.0f;
-      float x1 = (n * 13107.2f / 32768.0f);
+      float x1 = n * 0.4f;
       float x2 = 1.0f - x1;
       __disable_irq();
       combdamp1 = x1;
@@ -97,6 +99,8 @@ class AudioEffectFreeverb_F32 : public AudioStream_F32
 
 class AudioEffectFreeverbStereo_F32 : public AudioStream_F32
 {
+//GUI: inputs:1, outputs:2  //this line used for automatic generation of GUI node
+//GUI: shortName:effect_FreeverbStereo	
   public:
     AudioEffectFreeverbStereo_F32() : AudioStream_F32(1, inputQueueArray) { init(); }
     AudioEffectFreeverbStereo_F32(const AudioSettings_F32 &settings) : AudioStream_F32(1, inputQueueArray) { init(); }
@@ -105,12 +109,12 @@ class AudioEffectFreeverbStereo_F32 : public AudioStream_F32
     void roomsize(float n) {
       if (n > 1.0f) n = 1.0f;
       else if (n < 0.0f) n = 0.0f;
-      combfeeback = (n * 9175.04f / 32768.0f) + 22937.0f / 32768.0f;
+      combfeeback = (n * 0.28f) + 0.7f;
     }
     void damping(float n) {
       if (n > 1.0f) n = 1.0f;
       else if (n < 0.0) n = 0.0f;
-      float x1 = (n * 13107.2f / 32768.0f);
+      float x1 = n * 0.4f;
       float x2 = 1.0f - x1;
       __disable_irq();
       combdamp1 = x1;
